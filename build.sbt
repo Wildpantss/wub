@@ -5,8 +5,8 @@ ThisBuild / organization  := "com.wildpants"
 name                      := "wub"
 idePackagePrefix          := Some("com.wildpants.wub")
 
-libraryDependencies       += "com.lihaoyi" %%% "utest"  % "0.8.1" % Test
+libraryDependencies       += "org.scalatest" %%% "scalatest" % "3.2.15" % "test"
 
-testFrameworks            += new TestFramework("utest.runner.Framework")
+nativeLinkStubs           := true
 
 enablePlugins(ScalaNativePlugin)
