@@ -5,7 +5,7 @@ class NoteNameTest extends TestBase {
 
   import NoteName.*
   import NoteName.ReadNoteName
-  import utils.Read.read
+  import parser.Read.read
 
   /* ------------------------ Test NoteName.displayName ------------------------ */
 

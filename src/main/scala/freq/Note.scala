@@ -1,7 +1,7 @@
 package com.wildpants.wub
 package freq
 
-import utils.StringStyles.*
+import console.Style.*
 
 import java.io.IOException
 import scala.collection.immutable.LazyList as LL

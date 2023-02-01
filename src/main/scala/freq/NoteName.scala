@@ -1,7 +1,7 @@
 package com.wildpants.wub
 package freq
 
-import utils.Read
+import parser.Read
 
 /**
  * = NoteName =

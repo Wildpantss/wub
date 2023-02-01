@@ -1,5 +1,5 @@
 package com.wildpants.wub
-package utils
+package parser
 
 import scala.util.{Failure, Success, Try}
 
