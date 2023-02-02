@@ -53,11 +53,7 @@ class TaskLauncher(builder: parser.TaskLauncher.Builder) {
 
   /* ---------------- Private stuff about error message output on console ---------------- */
 
-  private def printNoArgumentError(): Unit = Console.err.println {
-    s"$ERROR_TAG no argument received, please input at least 1 argument as task name."
-      + endl * 2
-      + availableTasksText
-  }
+  private def printNoArgumentError(): Unit = Console.err.println(allTaskHelpOutput)
 
   private def invalidTaskName(task: String): Unit = Console.err.println {
     s"$ERROR_TAG task ${ task <<< TASK_STYLE } not found, please input a correct task name."
@@ -102,25 +98,25 @@ class TaskLauncher(builder: parser.TaskLauncher.Builder) {
         }
       }
     }
+  }
 
-    private def singleTaskHelpOutput(taskName: String): String = {
-      val task = taskDispatcher(taskName) // pre-checked, key is ensured to exist.
-      s"${ task.descLong }" + endl * 2 +
-      s"${ "Usage" <<< HEADER_STYLE }: ${"%-50s%s".format(task.usage.toString, task.descShort)}" + endl * 2 +
+  private def singleTaskHelpOutput(taskName: String): String = {
+    val task = taskDispatcher(taskName) // pre-checked, key is ensured to exist.
+    s"${ task.descLong }" + endl * 2 +
+      s"${ "Usage" <<< HEADER_STYLE }: ${ task.usage }" + endl * 2 +
       s"${ "Arguments" <<< HEADER_STYLE }:" + endl + task.usage.detailedDescription.map { (name, desc) =>
-        "%-20s%s".format(name, desc)
-      }.reduce(_ + endl + _)
-    }
+      "  %-20s%s".format(name, desc)
+    }.reduce(_ + endl + _)
+  }
 
-    private def allTaskHelpOutput: String = {
-      val tasks = taskDispatcher.values.toList.sortBy(_.name)
-      s"$appDescription" + endl * 2 +
-      s"${ "Usage" <<< HEADER_STYLE }: $appName <TASK-NAME>" + endl * 2 +
+  private def allTaskHelpOutput: String = {
+    val tasks = taskDispatcher.values.toList.sortBy(_.name)
+    s"$appDescription" + endl * 2 +
+      s"${ "Usage" <<< HEADER_STYLE }: $appName <task>" + endl * 2 +
       s"${ "Tasks" <<< HEADER_STYLE }:" + endl + tasks
-        .map(task => s"  %-50s%s".format(task.usage.toString, task.descShort))
-        .reduce(_ + endl + _) + endl * 2 +
+      .map(task => s"  %-50s%s".format(task.usage.toString, task.descShort))
+      .reduce(_ + endl + _) + endl * 2 +
       s"version: $appVersion"
-    }
   }
 }
 

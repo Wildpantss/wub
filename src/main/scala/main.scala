@@ -7,7 +7,7 @@ import tasks.*
 
 @main
 def main(args: String*): Unit = TaskLauncher {
-  val appName = "Wub"
+  val appName = "wub"
   val appVersion = "0.0.1"
   val description = Description("Wub is a CLI util-box for music production by Wildpants ^_^")
   Builder() <<< (appName, appVersion) <<< description <<< FreqTask()

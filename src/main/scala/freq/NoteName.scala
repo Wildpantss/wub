@@ -47,7 +47,7 @@ object NoteName {
       case "a"         => Right(A)
       case "a#" | "as" => Right(As)
       case "b"         => Right(B)
-      case _           => Left(s"input $s is not a valid note-name.")
+      case _           => Left(s"input '$s' is not a valid note-name.")
     }
   }
 }

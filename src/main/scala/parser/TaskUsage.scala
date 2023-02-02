@@ -46,23 +46,22 @@ class TaskUsage(builder: Builder) {
    * @return the [[Seq]] contains detailed info.
    * */
   def detailedDescription: Seq[(String, String)] = args.map { (name, status, desc) =>
-    val formattedName = status match
-      case Required => s"<$name>"
-      case Optional => s"[$name]"
-    (formattedName, desc)
+    formatUsageArgName(name, status) -> desc
   }
 
   override def toString: String = {
     val nameSection = s"${ name <<< Bold }"
     val argSection = args match {
       case a if a.isEmpty => ""
-      case _ => "  - " + args.map { (name, status, _) =>
-        status match
-          case Required => s"<$name>"
-          case Optional => s"[$name]"
-      }.reduce(_ + " " + _)
+      case _ => "  - " + args.map { (name, status, _) => formatUsageArgName((name, status)) }.reduce(_ + " " + _)
     }
     nameSection + argSection
+  }
+
+  private inline def formatUsageArgName(argInfo: (String, Requirement)): String = {
+    argInfo._2 match
+      case Required => s"<${argInfo._1}>"
+      case Optional => s"[${argInfo._1}]"
   }
 }
 

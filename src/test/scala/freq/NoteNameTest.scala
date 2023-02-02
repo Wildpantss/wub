@@ -31,7 +31,7 @@ class NoteNameTest extends TestBase {
 
   /* ------------------------ Test NoteName.ReadNoteName ------------------------ */
 
-  val errMessageTmpl = "input %s is not a valid note-name."
+  val errMessageTmpl = "input '%s' is not a valid note-name."
 
   val readNoteNameSuccessCases: Seq[(String, Either[String, NoteName])] = Seq(
     "C"  -> Right(C), "c"   -> Right(C),

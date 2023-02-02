@@ -68,7 +68,7 @@ object Read {
   given ReadShort: Read[Short] with
     override def read(s: String): Either[String, Short] = Try(s.toShort) match {
       case Success(value) => Right(value)
-      case Failure(_) => Left(s"input $s is not a valid short-int")
+      case Failure(_) => Left(s"input '$s' is not a valid short-int")
     }
 
   /**
@@ -77,7 +77,7 @@ object Read {
   given ReadInt: Read[Int] with
     def read(s: String): Either[String, Int] = Try(s.toInt) match {
       case Success(value) => Right(value)
-      case Failure(_) => Left(s"input $s is not a valid int")
+      case Failure(_) => Left(s"input '$s' is not a valid int")
     }
 
   /**
@@ -86,7 +86,7 @@ object Read {
   given ReadLong: Read[Long] with
     def read(s: String): Either[String, Long] = Try(s.toLong) match {
       case Success(value) => Right(value)
-      case Failure(_) => Left(s"input $s is not a valid long-int")
+      case Failure(_) => Left(s"input '$s' is not a valid long-int")
     }
 
   /**
@@ -95,7 +95,7 @@ object Read {
   given ReadFloat: Read[Float] with
     override def read(s: String): Either[String, Float] = Try(s.toFloat) match {
       case Success(value) => Right(value)
-      case Failure(_) => Left(s"input $s is not a valid float")
+      case Failure(_) => Left(s"input '$s' is not a valid float")
     }
 
   /**
@@ -104,7 +104,7 @@ object Read {
   given ReadDouble: Read[Double] with
     def read(s: String): Either[String, Double] = Try(s.toDouble) match {
       case Success(value) => Right(value)
-      case Failure(_) => Left(s"input $s is not a valid double-float")
+      case Failure(_) => Left(s"input '$s' is not a valid double-float")
     }
 
   /**
