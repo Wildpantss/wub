@@ -44,16 +44,15 @@ class TaskLauncher(builder: parser.TaskLauncher.Builder) {
       case None => invalidTaskName(taskName)                      // invalid task-name
       case Some(task) => task.execute(args) match
         case Right(_) =>
-        case Left(msg) => Console.err.println {
-          s"$ERROR_TAG task ${ taskName <<< TASK_STYLE } failed: $msg${ endl * 2 }" +
-          s"${ "Usage" <<< HEADER_STYLE }: ${ task.usage }"
-        }
+        case Left(msg) => Console.err.println(s"$ERROR_TAG task ${ taskName <<< TASK_STYLE } failed: $msg${ endl * 2 }")
     }
   }
 
   /* ---------------- Private stuff about error message output on console ---------------- */
 
-  private def printNoArgumentError(): Unit = Console.err.println(allTaskHelpOutput)
+  private def printNoArgumentError(): Unit = {
+    Console.err.println(allTaskHelpOutput)
+  }
 
   private def invalidTaskName(task: String): Unit = Console.err.println {
     s"$ERROR_TAG task ${ task <<< TASK_STYLE } not found, please input a correct task name."
@@ -67,37 +66,6 @@ class TaskLauncher(builder: parser.TaskLauncher.Builder) {
         .map(v => f" ${"-" <<< Bold} ${ v.name <<< TASK_STYLE }    ${ v.descShort }")
         .reduce(_ + endl + _)
       + endl
-  }
-
-  private def generateHelpTask: Task = new Task {
-
-    override val name: String = "help"
-    override val argSizeRange: (Int, Int) = 0 -> 1
-    override val descShort: String = "print help message for all or for the given task"
-    override val descLong: Description = Description() // this will never show
-    override val usage: TaskUsage = TaskUsage {
-      TaskUsage.Builder() <<< "help" <<< ("task-name", Optional, "name of task to get help")
-    }
-
-    override def execute(args: Seq[String]): Either[String, Unit] = {
-      processArguments(args) match
-        case Left(message) => Left(message)
-        case Right(Some(taskName)) => println(singleTaskHelpOutput(taskName)); Right(())
-        case Right(None) => println(allTaskHelpOutput); Right(())
-    }
-
-    private def processArguments(args: Seq[String]): Either[String, Option[String]] = {
-      checkArgSize(args.size) match {
-        case Left(message) => Left(message)
-        case Right(_) => args.size match {
-          case 0 => Right(None)
-          case 1 => taskDispatcher.get(args.head) match {
-            case Some(_) => Right(Some(args.head))
-            case None => Left(s"task ${ args.head } not found" + endl * 2 + availableTasksText)
-          }
-        }
-      }
-    }
   }
 
   private def singleTaskHelpOutput(taskName: String): String = {
@@ -117,6 +85,33 @@ class TaskLauncher(builder: parser.TaskLauncher.Builder) {
       .map(task => s"  %-50s%s".format(task.usage.toString, task.descShort))
       .reduce(_ + endl + _) + endl * 2 +
       s"version: $appVersion"
+  }
+
+  private def generateHelpTask: Task = new Task {
+
+    override val name: String = "help"
+    override val argSizeRange: (Int, Int) = 0 -> 1
+    override val descShort: String = "print help message for all or for the given task"
+    override val descLong: Description = Description() // this will never show
+    override val usage: TaskUsage = TaskUsage {
+      TaskUsage.Builder() <<< "help" <<< ("task-name", Optional, "an available task name    { Optional }")
+    }
+
+    override def execute(args: Seq[String]): Either[String, Unit] = {
+      processArguments(args) match
+        case Left(message) => Left(message)
+        case Right(Some(taskName)) => println(singleTaskHelpOutput(taskName)); Right(())
+        case Right(None) => println(allTaskHelpOutput); Right(())
+    }
+
+    private def processArguments(args: Seq[String]): Either[String, Option[String]] = {
+      checkArgSize(args.size).flatMap { _ => { args.size match
+        case 0 => Right(None)
+        case 1 => taskDispatcher.get(args.head) match
+          case Some(_) => Right(Some(args.head))
+          case None => Left(s"task ${ args.head <<< TASK_STYLE } not found" + endl * 2 + availableTasksText)
+      }}
+    }
   }
 }
 
