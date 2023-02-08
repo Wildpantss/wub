@@ -1,4 +1,7 @@
 .bsp
+.metals
+.bloop
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
