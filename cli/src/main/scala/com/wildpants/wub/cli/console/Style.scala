@@ -1,5 +1,4 @@
-package com.wildpants.wub
-package cli
+package com.wildpants.wub.cli
 package console
 
 import scala.annotation.targetName

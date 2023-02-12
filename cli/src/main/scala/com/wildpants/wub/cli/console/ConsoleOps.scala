@@ -1,5 +1,4 @@
-package com.wildpants.wub
-package cli
+package com.wildpants.wub.cli
 package console
 
 /** A series of console commonly-used operations.

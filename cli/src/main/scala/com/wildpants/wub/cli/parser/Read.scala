@@ -1,4 +1,5 @@
-package com.wildpants.wub.cli.parser
+package com.wildpants.wub.cli
+package parser
 
 /** Implement this type-class so the CLI-parser could handle your type from
   * string input.
