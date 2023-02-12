@@ -17,10 +17,13 @@ A simple CLI util-box for music production by Wildpants.
 (the standard A0 frequency is also tunable)
 
 * Example with default A = 440Hz
+
   ```shell
   wub freq as
   ```
+
   Console output:
+
   ```text
   ---- Harmonic series of 'A#'
   ---- Standard A = [440 Hz]
@@ -38,10 +41,13 @@ A simple CLI util-box for music production by Wildpants.
   ```
 
 * Example with default A != 440Hz
+
   ```shell
   wub freq fs 432
   ```
+
   Console output:
+  
   ```text
   ---- Harmonic series of 'F#'
   ---- Standard A = [432 Hz]
@@ -76,5 +82,5 @@ wub help freq
 
 ## Build
 
-- [SBT](https://www.scala-sbt.org/)
-- [Scala/Native](https://scala-native.org/)
+* [SBT](https://www.scala-sbt.org/)
+* [Scala/Native](https://scala-native.org/)
