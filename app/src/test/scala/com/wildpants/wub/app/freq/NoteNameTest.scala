@@ -30,62 +30,25 @@ class NoteNameTest extends TestBase:
     test(s"NoteName.display - $noteName") { noteName.displayName should be(supposed) }
   }
 
-  // /* ------------------------ Test NoteName.ReadNoteName ------------------------ */
+  /* ------------------------ Test NoteName.ReadNoteName ------------------------ */
 
   val errMessageTmpl = "input '%s' is not a valid note-name."
 
   val readNoteNameSuccessCases: Seq[(String, Either[String, NoteName])] = Seq(
-    "C" -> Right(C),
-    "c" -> Right(C),
-    "C#" -> Right(Cs),
-    "c#" -> Right(Cs),
-    "Cs" -> Right(Cs),
-    "cs" -> Right(Cs),
-    "CS" -> Right(Cs),
-    "cS" -> Right(Cs),
-    "D" -> Right(D),
-    "d" -> Right(D),
-    "D#" -> Right(Ds),
-    "d#" -> Right(Ds),
-    "Ds" -> Right(Ds),
-    "ds" -> Right(Ds),
-    "DS" -> Right(Ds),
-    "dS" -> Right(Ds),
-    "E" -> Right(E),
-    "e" -> Right(E),
-    "F" -> Right(F),
-    "f" -> Right(F),
-    "F#" -> Right(Fs),
-    "f#" -> Right(Fs),
-    "Fs" -> Right(Fs),
-    "fs" -> Right(Fs),
-    "FS" -> Right(Fs),
-    "fS" -> Right(Fs),
-    "G" -> Right(G),
-    "g" -> Right(G),
-    "G#" -> Right(Gs),
-    "g#" -> Right(Gs),
-    "Gs" -> Right(Gs),
-    "gs" -> Right(Gs),
-    "GS" -> Right(Gs),
-    "gS" -> Right(Gs),
-    "A" -> Right(A),
-    "a" -> Right(A),
-    "A#" -> Right(As),
-    "a#" -> Right(As),
-    "As" -> Right(As),
-    "as" -> Right(As),
-    "AS" -> Right(As),
-    "aS" -> Right(As),
-    "B" -> Right(B),
-    "b" -> Right(B),
-    "CR" -> Left(errMessageTmpl format "CR"),
-    "#$" -> Left(errMessageTmpl format "#$"),
-    "x#" -> Left(errMessageTmpl format "x#"),
-    "Xs" -> Left(errMessageTmpl format "Xs"),
-    "f!" -> Left(errMessageTmpl format "f!"),
-    "ZS" -> Left(errMessageTmpl format "ZS")
-  )
+    Seq("C", "c").map(_ -> Right(C)),
+    Seq("C#", "c#", "Cs", "cs", "CS", "cS").map(_ -> Right(Cs)),
+    Seq("D", "d").map(_ -> Right(D)),
+    Seq("D#", "d#", "Ds", "ds", "DS", "dS").map(_ -> Right(Ds)),
+    Seq("E", "e").map(_ -> Right(E)),
+    Seq("F", "f").map(_ -> Right(F)),
+    Seq("F#", "f#", "Fs", "fs", "FS", "fS").map(_ -> Right(Fs)),
+    Seq("G", "g").map(_ -> Right(G)),
+    Seq("G#", "g#", "Gs", "gs", "GS", "gS").map(_ -> Right(Gs)),
+    Seq("A", "a").map(_ -> Right(A)),
+    Seq("A#", "a#", "As", "as", "AS", "aS").map(_ -> Right(As)),
+    Seq("B", "b").map(_ -> Right(B)),
+    Seq("CR", "#$", "x#", "Xs", "f!", "ZS").map(x => x -> Left(errMessageTmpl format x))
+  ).flatten
 
   readNoteNameSuccessCases.foreach { tc =>
     val input = tc._1
