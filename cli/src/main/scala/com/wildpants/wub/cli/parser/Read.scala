@@ -1,10 +1,9 @@
 package com.wildpants.wub.cli
 package parser
 
-/** Implement this type-class so the CLI-parser could handle your type from
-  * string input.
+/** Implement this type-class so the CLI-parser could handle your type from string input.
   */
-trait Read[T] {
+trait Read[T]:
 
   /** Trying to generate 'T' instance from [[String]].
     *
@@ -13,13 +12,14 @@ trait Read[T] {
     * @param str
     *   the [[String]] to read
     * @return
-    *   an [[Either]], being [[Left]] and contains error message when failed,
-    *   [[Right]] and contains 'T' instance when success
+    *   an [[Either]], being [[Left]] and contains error message when failed, [[Right]] and contains
+    *   'T' instance when success
     */
   def read(str: String): Either[String, T]
-}
 
-object Read {
+end Read
+
+object Read:
 
   /** A shortcut for summoning instance of Read[T].
     *
@@ -30,38 +30,32 @@ object Read {
     */
   def apply[T: Read]: Read[T] = summon
 
-  given ShortRead: Read[Short] = { (str: String) =>
+  given ShortRead: Read[Short] = (str: String) =>
     str.toShortOption match
       case Some(i) => Right(i)
       case None    => Left(s"invalid input '$str' for short-int")
-  }
 
-  given IntRead: Read[Int] = { (str: String) =>
+  given IntRead: Read[Int] = (str: String) =>
     str.toIntOption match
       case Some(i) => Right(i)
       case None    => Left(s"invalid input '$str' for int")
-  }
 
-  given LongRead: Read[Long] = { (str: String) =>
+  given LongRead: Read[Long] = (str: String) =>
     str.toLongOption match
       case Some(i) => Right(i)
       case None    => Left(s"invalid input '$str' for long-int")
-  }
 
-  given FloatRead: Read[Float] = { (str: String) =>
+  given FloatRead: Read[Float] = (str: String) =>
     str.toFloatOption match
       case Some(i) => Right(i)
       case None    => Left(s"invalid input '$str' for float")
-  }
 
-  given DoubleRead: Read[Double] = { (str: String) =>
+  given DoubleRead: Read[Double] = (str: String) =>
     str.toDoubleOption match
       case Some(i) => Right(i)
       case None    => Left(s"invalid input '$str' for double-precision-float")
-  }
 
-  given StringRead: Read[String] = { (str: String) =>
+  given StringRead: Read[String] = (str: String) =>
     Right(str)
-  }
 
-}
+end Read

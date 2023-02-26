@@ -6,8 +6,8 @@ import scala.io.AnsiColor.*
 
 /** The [[String]]'s console output style for extension method [[Style.style]].
   *
-  * Styles are composable, you could call method [[compose]] or use operator
-  * [[+]] to compose styles.
+  * Styles are composable, you could call method [[compose]] or use operator [[+]] to compose
+  * styles.
   *
   * @example
   *   composing 'blue' and 'bold'
@@ -24,7 +24,7 @@ import scala.io.AnsiColor.*
   *   println("456" <<< Blue <<< Bold))
   *   ```
   */
-class Style(private val decorator: String => String) {
+class Style(private val decorator: String => String):
 
   /** Compose 2 styles.
     *
@@ -40,10 +40,11 @@ class Style(private val decorator: String => String) {
     *   the composed [[Style]]
     */
   @targetName("compose")
-  def +(that: Style): Style = Style { this.decorator compose that.decorator }
-}
+  def +(that: Style): Style = Style(this.decorator compose that.decorator)
 
-object Style {
+end Style
+
+object Style:
 
   /* --- Pre-defined Styles HERE --- */
 
@@ -131,16 +132,14 @@ object Style {
     */
   object Invisible extends Style(INVISIBLE + _ + RESET)
 
-  extension (self: String) {
-
+  extension (self: String)
     /** Decorate a string with parameterized [[Style]].
       */
     @targetName("setStyle")
     def <<<(s: Style): String = s.decorator(self)
-  }
 
   /* --- Shortcut extension methods for specific single style --- */
-  extension (self: String) {
+  extension (self: String)
 
     /** Decorate a string with foreground color for ANSI black */
     def black: String = BLACK + self + RESET
@@ -204,5 +203,7 @@ object Style {
 
     /** Decorate a string with foreground color for ANSI invisible */
     def invisible: String = INVISIBLE + self + RESET
-  }
-}
+
+  end extension
+
+end Style

@@ -4,12 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## v0.0.2 (2023-02-02)
 
-**Features**
+Features:
 
 - Optimized console output format
 
 ## v0.0.1 (2023-02-01)
 
-**Features**
+Features:
 
 - Frequency calculation module

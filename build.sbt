@@ -4,6 +4,8 @@ ThisBuild / organization := "com.wildpants"
 
 /* ------------------------ Project Structure ------------------------ */
 
+import Dependencies.*
+
 lazy val root = (project in file("."))
   .settings(name := "wub")
   .settings(addCommandAlias("run", "app/run"))
@@ -12,15 +14,11 @@ lazy val root = (project in file("."))
 
 lazy val cli = (project in file("./cli"))
   .settings(name := "cli")
-  .settings(
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.15" % Test
-  )
+  .settings(libraryDependencies += scalatest.value)
 
 lazy val app = (project in file("./app"))
   .settings(name := "app")
-  .settings(
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.15" % Test
-  )
+  .settings(libraryDependencies += scalatest.value)
   .dependsOn(cli)
 
 /* ----------------------- Scala/Native Configs ---------------------- */
