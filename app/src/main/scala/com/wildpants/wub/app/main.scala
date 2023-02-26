@@ -3,17 +3,20 @@ package app
 
 import cli.parser.*
 import CliApp.*
+import cli.console.ConsoleOps.*
+import freq.{NoteName, Note}
 
 @main
 def main(args: String*): Unit =
 
   val app = CliApp(
     name = "wub",
-    version = "0.0.1",
+    version = "0.0.3",
     author = "wildpants",
-    desc = "desc for wub app",
-    "wub1" -> task[Wub1](wub1 => Right(println(wub1))),
-    "wub2" -> task[Wub2](wub2 => Right(println(wub2)))
+    desc = "Wub is a CLI util-box for music production by Wildpants ^_^",
+    "freq" -> task[Freq](freq =>
+      Right(printLine(Note(freq.noteName, freq.standardFreq).displayFormat()))
+    )
   )
 
   app.launch(args)
@@ -22,17 +25,11 @@ end main
 
 /* ---------------- Task argument entities ---------------- */
 
-/** aaa
+/** harmonic series calculation and displaying
   *
-  * @param name
-  *   nnnnnnn
-  * @param score
-  *   sssssssss
+  * @param noteName
+  *   name of note to calculate harmonics
+  * @param standardFreq
+  *   standard 'A' frequency as calculation reference
   */
-case class Wub1(name: String, score: Int = 5)
-
-/** bbb
-  * @param name
-  *   aaaaaaaaa
-  */
-case class Wub2(name: String)
+case class Freq(noteName: NoteName, standardFreq: Double = 440.0)
