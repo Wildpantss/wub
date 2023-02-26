@@ -7,8 +7,8 @@ import console.Style.*
 
 // Some contant like element default styles HERE
 
-val APP_NAME_STYLE: Style = Bold
-val CMD_NAME_STYLE: Style = Bold + Cyan
-val HEADER_STYLE: Style = Bold + Underline
-val REQ_ARG_STYLE: Style = Yellow
-val OPT_ARG_COLOR: Style = Green
+private[parser] val APP_NAME_STYLE: Style = Bold
+private[parser] val CMD_NAME_STYLE: Style = Bold + Cyan
+private[parser] val HEADER_STYLE: Style = Bold + Underline
+private[parser] val REQ_ARG_STYLE: Style = Yellow
+private[parser] val OPT_ARG_COLOR: Style = Green

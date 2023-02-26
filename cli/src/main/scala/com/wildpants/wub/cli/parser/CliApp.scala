@@ -10,6 +10,8 @@ import scala.collection.mutable
 
 import CliApp.*
 
+/** Configuration for your CLI-APP.
+  */
 class CliApp private (
   private val appName: String,
   private val version: String,
@@ -23,6 +25,8 @@ class CliApp private (
   private val taskInfo: Map[String, CmdInfo] = setupHelpAndVersion(rawTasks, rawTaskInfo)._2
   private val outputGen: OutputGenerator = OutputGenerator(appName, version, author, desc, taskInfo)
 
+  /** Launch your CLI-APP.
+    */
   def launch(args: Seq[String]): Unit =
     val result = run(args)
     processResult(result)
@@ -92,8 +96,28 @@ end CliApp
 
 object CliApp:
 
+  /** A type-aliase for function that represents the cli task.
+    *
+    * It takes a [[Seq]] of [[String]] as input from console, returns an [[Either]]: [[Left]] with
+    * error message when failed, [[Right]] of [[Unit]] when success.
+    */
   type CliCmd = Seq[String] => Either[String, Unit]
 
+  /** Construct a [[CliApp]] instance.
+    *
+    * @param name
+    *   the name of your app
+    * @param version
+    *   the version of your app
+    * @param author
+    *   author of the app
+    * @param desc
+    *   the description text of your app
+    * @param tasks
+    *   task logic for you app commands
+    * @return
+    *   the [[CliApp]] instance
+    */
   def apply(
     name: String,
     version: String,
@@ -105,6 +129,13 @@ object CliApp:
     val info_ = tasks.map(t => (t._1, t._2._2)).toMap
     new CliApp(name, version, author, desc, task_, info_)
 
+  /** Shortcut for register a task.
+    *
+    * This is useful in building [[CliApp]] instance.
+    *
+    * @see
+    *   [[apply]]
+    */
   inline def task[T: Mirror.ProductOf](func: T => Either[String, Unit]): (CliCmd, CmdInfo) =
     ((args: Seq[String]) => readProduct[T](args).flatMap(x => func(x))) -> inspectCmd[T]
 

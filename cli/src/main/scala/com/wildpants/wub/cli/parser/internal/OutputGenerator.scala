@@ -9,7 +9,9 @@ import NameFormatUtils.*
 import scala.util.Properties.lineSeparator as endl
 import scala.collection.mutable.StringBuilder
 
-class OutputGenerator(
+/** Output text generator for [[CliApp]].
+  */
+private[parser] class OutputGenerator(
   private val appName: String,
   private val version: String,
   private val author: String,
@@ -54,6 +56,7 @@ class OutputGenerator(
     .append { s"${"Commands" <<< HEADER_STYLE}: " + endl }
     .append { commandList + endl }
     .toString
+
   /* ------------------------ Private stuff ------------------------ */
 
   private def commandList: String =
