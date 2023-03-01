@@ -19,8 +19,7 @@ private[parser] class OutputGenerator(
   private val taskInfo: Map[String, CmdInfo]
 ):
 
-  def globalHelp: String = StringBuilder()
-    .append { s"${appName.toUpperCase <<< APP_NAME_STYLE}  v$version" + endl * 2 }
+  def globalHelp: String = StringBuilder(endl)
     .append { desc + endl * 2 }
     .append { s"${"Usage" <<< HEADER_STYLE}: " }
     .append { s"$$ '${camelOrPascalToKebab(appName)} <command>'" + endl * 2 }
@@ -32,29 +31,35 @@ private[parser] class OutputGenerator(
     val argInfo = taskInfo(cmd)
     val argDetails = argInfo.args.map(a => a.nameDispColored -> a.desc)
     val maxNameLen = argDetails.map(_._1.size).max
-    val builder = StringBuilder()
-      .append { s"${cmd <<< CMD_NAME_STYLE}: ${argInfo.desc}" + endl * 2 }
-      .append { s"${"Arguments" <<< HEADER_STYLE}:" + endl }
+    val builder = StringBuilder(endl)
+      .append { argInfo.desc + endl * 2 }
+      .append { s"${"Commands" <<< HEADER_STYLE}:" + endl }
 
     argDetails.foreach(a => builder.append { s"%-${maxNameLen + 6}s %s".format(a._1, a._2) + endl })
-    builder.toString
+    builder.append(endl).toString
 
-  def versionInfo: String =
-    s"${appName <<< APP_NAME_STYLE} v$version  -- by $author"
+  def versionInfo: String = StringBuilder(endl)
+    .append { s"${appName <<< APP_NAME_STYLE} v$version  -- by $author" }
+    .append { endl }
+    .toString
 
-  def taskFailureInfo(cmd: String, reason: String): String =
-    s"${"[error]" <<< Red} $reason"
+  def taskFailureInfo(cmd: String, reason: String): String = StringBuilder(endl)
+    .append { reason }
+    .append { endl }
+    .toString
 
-  def noCmdInfo: String = StringBuilder()
-    .append { s"${"[error]" <<< Red} please select a command to execute!" + endl * 2 }
+  def noCmdInfo: String = StringBuilder(endl)
+    .append { ("please select a command to execute!" <<< Red) + endl * 2 }
     .append { s"${"Commands" <<< HEADER_STYLE}: " + endl }
     .append { commandList + endl }
     .toString
 
-  def cmdNotFoundInfo(cmd: String): String = StringBuilder()
-    .append { s"${"[error]" <<< Red} command '$cmd' not found!" + endl * 2 }
-    .append { s"${"Commands" <<< HEADER_STYLE}: " + endl }
-    .append { commandList + endl }
+  def cmdNotFoundInfo(cmd: String): String = StringBuilder(endl)
+    .append { (s"command '$cmd' not found! please choose one from follow:" <<< Red) + endl }
+    .append {
+      taskInfo.toList.map(_._1).map(x => s" - ${x <<< CMD_NAME_STYLE}").reduce(_ + endl + _)
+    }
+    .append { endl }
     .toString
 
   /* ------------------------ Private stuff ------------------------ */

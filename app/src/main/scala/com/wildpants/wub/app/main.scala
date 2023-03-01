@@ -2,9 +2,9 @@ package com.wildpants.wub
 package app
 
 import cli.parser.*
-import CliApp.*
+import cli.parser.CliApp.*
 import cli.console.ConsoleOps.*
-import freq.{NoteName, Note}
+import freq.*
 
 @main
 def main(args: String*): Unit =
@@ -21,6 +21,31 @@ def main(args: String*): Unit =
 
   app.launch(args)
 
+  /*
+  A ?
+
+  CliApp.builder()
+    .name("wub")
+    .version("0.0.3")
+    .author("wildpants")
+    .desc("Wub is a CLI util-box for music production by Wildpants ^_^")
+    .task[Freq]
+    .task[...]
+    .build
+   */
+
+  /*
+  B ? (using context function type)
+
+  CliApp.build {
+    name    <- "wub"
+    version <- "0.0.3"
+    author  <- "wildpants"
+    desc    <- "Wub is a CLI util-box for music production by Wildpants ^_^"
+    command <- task[Freq]
+    command <- task[Arch]
+  }
+   */
 end main
 
 /* ---------------- Task argument entities ---------------- */
