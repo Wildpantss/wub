@@ -2,50 +2,24 @@ package com.wildpants.wub
 package app
 
 import cli.parser.*
-import cli.parser.CliApp.*
+import cli.parser.syntax.*
 import cli.console.ConsoleOps.*
-import freq.*
+
+import freq.{NoteName, freqTask}
 
 @main
 def main(args: String*): Unit =
 
-  val app = CliApp(
-    name = "wub",
-    version = "0.0.3",
-    author = "wildpants",
-    desc = "Wub is a CLI util-box for music production by Wildpants ^_^",
-    "freq" -> task[Freq](freq =>
-      Right(printLine(Note(freq.noteName, freq.standardFreq).displayFormat()))
-    )
-  )
-
-  app.launch(args)
-
-  /*
-  A ?
-
-  CliApp.builder()
-    .name("wub")
-    .version("0.0.3")
-    .author("wildpants")
-    .desc("Wub is a CLI util-box for music production by Wildpants ^_^")
-    .task[Freq]
-    .task[...]
-    .build
-   */
-
-  /*
-  B ? (using context function type)
-
-  CliApp.build {
-    name    <- "wub"
-    version <- "0.0.3"
-    author  <- "wildpants"
-    desc    <- "Wub is a CLI util-box for music production by Wildpants ^_^"
-    command <- task[Freq]
-    command <- task[Arch]
+  val builder = app {
+    name { "wub" }
+    version { "0.0.1" }
+    author { "wildpants" }
+    desc { "Wub is a CLI util-box for music production by Wildpants ^_^" }
+    command { "freq" -> freqTask }
   }
-   */
+
+  CliApp { builder } launch args
+
 end main
 
 /* ---------------- Task argument entities ---------------- */

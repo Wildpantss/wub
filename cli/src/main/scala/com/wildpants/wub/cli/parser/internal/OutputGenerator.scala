@@ -44,7 +44,7 @@ private[parser] class OutputGenerator(
     .toString
 
   def taskFailureInfo(cmd: String, reason: String): String = StringBuilder(endl)
-    .append { reason }
+    .append { reason <<< Red }
     .append { endl }
     .toString
 

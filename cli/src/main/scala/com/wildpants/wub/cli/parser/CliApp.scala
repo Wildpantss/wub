@@ -1,6 +1,7 @@
 package com.wildpants.wub.cli
 package parser
 
+import syntax.AppBuilder
 import internal.*
 import console.ConsoleOps.*
 import ProductParsingUtils.readProduct
@@ -124,19 +125,28 @@ object CliApp:
     author: String,
     desc: String,
     tasks: (String, (CliCmd, CmdInfo))*
-  ) =
+  ): CliApp =
     val task_ = tasks.map(t => (t._1, t._2._1)).toMap
     val info_ = tasks.map(t => (t._1, t._2._2)).toMap
     new CliApp(name, version, author, desc, task_, info_)
 
-  /** Shortcut for register a task.
-    *
-    * This is useful in building [[CliApp]] instance.
-    *
-    * @see
-    *   [[apply]]
-    */
-  inline def task[T: Mirror.ProductOf](func: T => Either[String, Unit]): (CliCmd, CmdInfo) =
-    ((args: Seq[String]) => readProduct[T](args).flatMap(x => func(x))) -> inspectCmd[T]
+  def apply(builder: AppBuilder): CliApp =
+    apply(
+      builder.name.get,
+      builder.version.get,
+      builder.author.get,
+      builder.desc.get,
+      builder.commands.toList*
+    )
 
 end CliApp
+
+/** Shortcut for register a task.
+  *
+  * This is useful in building [[CliApp]] instance.
+  *
+  * @see
+  *   [[apply]]
+  */
+inline def task[T: Mirror.ProductOf](func: T => Either[String, Unit]): (CliCmd, CmdInfo) =
+  ((args: Seq[String]) => readProduct[T](args).flatMap(x => func(x))) -> inspectCmd[T]
