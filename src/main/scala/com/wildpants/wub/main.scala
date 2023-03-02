@@ -11,7 +11,7 @@ def main(args: String*): Unit =
 
   val builder = app {
     name { "wub" }
-    version { "0.0.1" }
+    version { "0.0.3" }
     author { "wildpants" }
     desc { "Wub is a CLI util-box for music production by Wildpants ^_^" }
     command { "freq" -> freqTask }
