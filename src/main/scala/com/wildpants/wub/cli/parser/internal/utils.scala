@@ -4,6 +4,7 @@ package internal
 
 import scala.compiletime.*
 import scala.deriving.Mirror.ProductOf as Prd
+import scala.collection.mutable.ListBuffer
 
 private[parser] object NameFormatUtils:
 
@@ -25,9 +26,14 @@ private[parser] object NameFormatUtils:
     *   the kebab-case name
     */
   def camelOrPascalToKebab(str: String): String =
-    str.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")
-      .map(_.toLowerCase())
-      .reduce(_ + "-" + _)
+    val words = ListBuffer.empty[String]
+    val indexes = str.zipWithIndex.filter(_._1.isUpper).map(_._2)
+    var curIdx = 0
+    indexes.foreach { i => words.addOne(str.slice(curIdx, i)); curIdx = i }
+    words.addOne(str.slice(curIdx, str.length))
+    if words.head == "" then words.remove(0)
+    words.map(_.toLowerCase).reduceOption(_ + "-" + _).getOrElse("")
+
 
   /** Transform a legal kebab-case symbol name into camel-case.
     *
