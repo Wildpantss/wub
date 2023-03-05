@@ -1,10 +1,9 @@
 package com.wildpants.wub.cli
 package console
 
-import scala.annotation.targetName
 import scala.io.AnsiColor.*
 
-/** The [[String]]'s console output style for extension method [[Style.style]].
+/** The [[String]]'s console output style.
   *
   * Styles are composable, you could call method [[compose]] or use operator
   * [[+]] to compose styles.
@@ -13,20 +12,14 @@ import scala.io.AnsiColor.*
   *   composing 'blue' and 'bold'
   *   ```scala
   *   import style.*
-  *
-  *   // using extension method
-  *   println("123".style(Blue + Bold))
-  *
-  *   // using operator with composed style
-  *   println("456" <<< (Blue + Bold))
-  *
-  *   // using operator set multiple styles
-  *   println("456" <<< Blue <<< Bold))
+  *   println("123".style(Blue + Bold)) // using extension method
+  *   println("456" <<< (Blue + Bold))  // using operator with composed style
+  *   println("456" <<< Blue <<< Bold)) // using operator set multiple styles
   *   ```
   */
-class Style(private val decorator: String => String):
+class Style(private val wrapper: String => String):
 
-  /** Compose 2 styles.
+  /** Compose styles.
     *
     * @example
     *   ```scala
@@ -39,14 +32,24 @@ class Style(private val decorator: String => String):
     * @return
     *   the composed [[Style]]
     */
-  @targetName("compose")
-  def +(that: Style): Style = Style(this.decorator compose that.decorator)
+  def compose(that: Style): Style =
+    Style(this.wrapper compose that.wrapper)
+
+  /** Alias for [[compose]], compose styles.
+    *
+    * @param that
+    *   the other [[Style]] to compose with
+    * @return
+    *   the composed [[Style]]
+    */
+  inline def +(that: Style): Style =
+    compose(that)
 
 end Style
 
 object Style:
 
-  /* --- Pre-defined Styles HERE --- */
+  /* ---------------- Pre-defined styles ---------------- */
 
   /** A [[Style]] that represents the ANSI black.
     */
@@ -132,13 +135,8 @@ object Style:
     */
   object Invisible extends Style(INVISIBLE + _ + RESET)
 
-  extension (self: String)
-    /** Decorate a string with parameterized [[Style]].
-      */
-    @targetName("setStyle")
-    def <<<(s: Style): String = s.decorator(self)
+  /* -------- Shortcut extensions for specific single style -------- */
 
-  /* --- Shortcut extension methods for specific single style --- */
   extension (self: String)
 
     /** Decorate a string with foreground color for ANSI black */
@@ -203,6 +201,23 @@ object Style:
 
     /** Decorate a string with foreground color for ANSI invisible */
     def invisible: String = INVISIBLE + self + RESET
+
+  end extension
+
+  /* -------- Extensions for setting style on string -------- */
+
+  extension (self: String)
+
+    /** Decorate a string with parameterized [[Style]].
+      *
+      * @param style
+      *   the style to apply on string
+      */
+    def setStyle(style: Style): String = style.wrapper(self)
+
+    /** Alias of [[setStyle]], decorate a string with parameterized [[Style]].
+      */
+    inline def <<< : Style => String = setStyle
 
   end extension
 

@@ -1,7 +1,8 @@
-package com.wildpants.wub.app
+package com.wildpants.wub
+package app
 package freq
 
-import com.wildpants.wub.cli.parser.Read
+import cli.parser.Read
 
 class NoteNameTest extends TestBase:
 
@@ -57,7 +58,7 @@ class NoteNameTest extends TestBase:
     val input = tc._1
     val supposed = tc._2
     test(s"NoteName.ReadNoteName - '$input'") {
-      Read[NoteName].read(input) should be(supposed)
+      Read[NoteName].rawRead(input) should be(supposed)
     }
   }
 

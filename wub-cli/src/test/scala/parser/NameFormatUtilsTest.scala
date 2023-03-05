@@ -1,6 +1,5 @@
 package com.wildpants.wub.cli
 package parser
-package internal
 
 import NameFormatUtils.*
 

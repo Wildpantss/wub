@@ -39,4 +39,3 @@ graalVMNativeImageOptions ++= Seq(
   "--initialize-at-build-time",
   "--no-fallback"
 )
-

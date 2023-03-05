@@ -1,22 +1,44 @@
 package com.wildpants.wub.cli
 package parser
 
-/** Implement this type-class so the CLI-parser could handle your type from
+import cats.syntax.all.*
+
+/** A type-class for reading a [[String]] into instance of type 'T'.
+  *
+  * Implement this type-class so the CLI-parser could parse your type from
   * string input.
+  *
+  * @example
+  *   ```scala
+  *   // example for impl the 'Read' type-class for type 'Short'
+  *   given ShortRead: Read[Short] = (str: String) => str.toShortOption
+  *   ```
+  *
+  * @tparam T
+  *   the target type to read
   */
 trait Read[T]:
 
   /** Trying to generate 'T' instance from [[String]].
     *
-    * @tparam T
-    *   the type to generate instance
     * @param str
     *   the [[String]] to read
     * @return
-    *   an [[Either]], being [[Left]] and contains error message when failed,
-    *   [[Right]] and contains 'T' instance when success
+    *   an [[Either]], as [[Left]] with message when failed, [[Right]] that
+    *   contains 'T' instance on success
     */
-  def read(str: String): Either[String, T]
+  def rawRead(str: String): Either[String, T]
+
+  /** Internal actual applied read function, a wrapper on [[rawRead]].
+    *
+    * @param str
+    *   the [[String]] to read, as input
+    * @return
+    *   an [[Either]], as [[Left]] contains (inputVal, errorMsg) when failed,
+    *   [[Right]] that contains instance of 'T' on success
+    */
+  private[parser] def read(str: String): Either[(String, String), T] =
+    rawRead(str).leftMap(str -> _)
 
 end Read
 
@@ -31,30 +53,22 @@ object Read:
     */
   def apply[T: Read]: Read[T] = summon
 
+  /* ------------------------ Pre-defined instances ------------------------ */
+
   given ShortRead: Read[Short] = (str: String) =>
-    str.toShortOption match
-      case Some(i) => Right(i)
-      case None    => Left(s"invalid input '$str' for short-int")
+    Either.fromOption(str.toShortOption, s"invalid input for {Short}")
 
   given IntRead: Read[Int] = (str: String) =>
-    str.toIntOption match
-      case Some(i) => Right(i)
-      case None    => Left(s"invalid input '$str' for int")
+    Either.fromOption(str.toIntOption, s"invalid input for {Int}")
 
   given LongRead: Read[Long] = (str: String) =>
-    str.toLongOption match
-      case Some(i) => Right(i)
-      case None    => Left(s"invalid input '$str' for long-int")
+    Either.fromOption(str.toLongOption, s"invalid input for {Long}")
 
   given FloatRead: Read[Float] = (str: String) =>
-    str.toFloatOption match
-      case Some(i) => Right(i)
-      case None    => Left(s"invalid input '$str' for float")
+    Either.fromOption(str.toFloatOption, s"invalid input for {Float}")
 
   given DoubleRead: Read[Double] = (str: String) =>
-    str.toDoubleOption match
-      case Some(i) => Right(i)
-      case None    => Left(s"invalid input '$str' for double-precision-float")
+    Either.fromOption(str.toDoubleOption, s"invalid input for {Double}")
 
   given StringRead: Read[String] = (str: String) =>
     Right(str)
