@@ -56,19 +56,19 @@ object Read:
   /* ------------------------ Pre-defined instances ------------------------ */
 
   given ShortRead: Read[Short] = (str: String) =>
-    Either.fromOption(str.toShortOption, s"invalid input for {Short}")
+    Either.fromOption(str.toShortOption, s"not a 'Short'")
 
   given IntRead: Read[Int] = (str: String) =>
-    Either.fromOption(str.toIntOption, s"invalid input for {Int}")
+    Either.fromOption(str.toIntOption, s"not a 'Int'")
 
   given LongRead: Read[Long] = (str: String) =>
-    Either.fromOption(str.toLongOption, s"invalid input for {Long}")
+    Either.fromOption(str.toLongOption, s"not a 'Long'")
 
   given FloatRead: Read[Float] = (str: String) =>
-    Either.fromOption(str.toFloatOption, s"invalid input for {Float}")
+    Either.fromOption(str.toFloatOption, s"not a 'Float'")
 
   given DoubleRead: Read[Double] = (str: String) =>
-    Either.fromOption(str.toDoubleOption, s"invalid input for {Double}")
+    Either.fromOption(str.toDoubleOption, s"not a 'Double'")
 
   given StringRead: Read[String] = (str: String) =>
     Right(str)
