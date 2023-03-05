@@ -23,15 +23,9 @@ private[parser] object NameFormatUtils:
     *   the kebab-case name
     */
   def camelOrPascalToKebab(str: String): String =
-    val words = ListBuffer.empty[String]
-    val indexes = str.zipWithIndex.filter(_._1.isUpper).map(_._2)
-    var curIdx = 0
-    indexes.foreach { i =>
-      words.addOne(str.slice(curIdx, i)); curIdx = i
-    }
-    words.addOne(str.slice(curIdx, str.length))
-    if words.head == "" then words.remove(0)
-    words.map(_.toLowerCase).reduceOption(_ + "-" + _).getOrElse("")
+    str.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")
+      .map(_.toLowerCase())
+      .reduce(_ + "-" + _)
 
   /** Transform a legal kebab-case symbol name into camel-case.
     *
