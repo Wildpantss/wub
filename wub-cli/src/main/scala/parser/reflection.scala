@@ -1,12 +1,10 @@
 package com.wildpants.wub.cli
 package parser
 
-
 import cats.syntax.all.*
 import scala.quoted.*
 import scala.deriving.Mirror.ProductOf as Prd
 import scala.compiletime.*
-
 
 /** A group of common-used macros. (package-private inside `parser`)
   */
@@ -31,7 +29,6 @@ private object Macros:
     inline def inspectTypeName[T]: String =
       ${ Impl.inspectTypeName[T] }
 
-
     /** Check is the target type a case-class.
       *
       * @note
@@ -43,7 +40,6 @@ private object Macros:
       */
     inline def checkIsCaseClass[T]: Unit =
       ${ Impl.checkIsCaseClass[T] }
-
 
     /** Get the arity of a case-class in compile-time.
       *
@@ -58,7 +54,6 @@ private object Macros:
       */
     inline def inspectArity[T]: Int =
       ${ Impl.inspectArity[T] }
-
 
     /** Get the default values of target case-class's fields in the definition
       * order. (Fill with [[None]] if the field has no default value)
@@ -75,7 +70,6 @@ private object Macros:
     inline def inspectDefaults[T]: List[Option[?]] =
       ${ Impl.inspectDefaults[T] }
 
-
     /** Get the field names of target case-class. (in definition order)
       *
       * @note
@@ -89,7 +83,6 @@ private object Macros:
       */
     inline def inspectFieldNames[T]: List[String] =
       ${ Impl.inspectFieldNames[T] }
-
 
     /** Summon [[Read]] instances for all fields of the target case-class in the
       * order of definition of fields.
@@ -106,7 +99,6 @@ private object Macros:
     inline def summonReads[T]: List[Read[?]] =
       ${ Impl.summonReads[T] }
 
-
     /** Check whether the target case-class's default params are all at trailing
       * position.
       *
@@ -121,7 +113,6 @@ private object Macros:
       ${ Impl.checkIsDefaultsTrailing[T] }
 
   end Entr
-
 
   /** Implementations of the macro inside [[Macros]].
     *
@@ -142,7 +133,6 @@ private object Macros:
     def inspectTypeName[T: Type](using Quotes): Expr[String] =
       import quotes.reflect.*
       Expr(TypeRepr.of[T].typeSymbol.name)
-
 
     /** Check is the target type a case-class.
       *
@@ -165,7 +155,6 @@ private object Macros:
         case false => report.errorAndAbort(s"type '$tName' is not a case-class")
         case true  => '{}
 
-
     /** Get the arity of a case-class in compile-time.
       *
       * @note
@@ -183,7 +172,6 @@ private object Macros:
 
       val typeSym = TypeRepr.of[T].typeSymbol
       Expr(typeSym.primaryConstructor.paramSymss.head.size)
-
 
     /** Get the default values of target case-class's fields in the definition
       * order. (Fill with [[None]] if the field has no default value)
@@ -209,7 +197,6 @@ private object Macros:
       }
       Expr.ofList(exprList)
 
-
     /** Get the field names of target case-class. (in definition order)
       *
       * @note
@@ -226,7 +213,6 @@ private object Macros:
       import quotes.reflect.*
       checkIsCaseClass[T]
       Expr(TypeRepr.of[T].typeSymbol.caseFields.map(_.name))
-
 
     /** Summon [[Read]] instances for all fields of the target case-class in the
       * order of definition of fields.
@@ -257,7 +243,6 @@ private object Macros:
         }
       Expr.ofList(readExprs)
 
-
     /** Check whether the target case-class's default params are all at trailing
       * position.
       *
@@ -284,9 +269,7 @@ private object Macros:
         case true  => '{}
         case false => report.errorAndAbort(errMsg)
 
-
     /* ------------------------ Private Functions ------------------------ */
-
 
     // Get default expr list of target type, Some on default val exists
     private def getDefaultExprs[T: Type](using Quotes): List[Option[Expr[?]]] =
@@ -305,7 +288,6 @@ private object Macros:
   end Impl
 
 end Macros
-
 
 /** A group of functions for case-class parsing. (package-private inside
   * `parser`)
@@ -329,9 +311,7 @@ private object CCParsing:
     Macros.Entr.checkIsDefaultsTrailing[T]
     checkArgSize[T](args).flatMap(_ => genInst[T](args))
 
-
   /* ------------------------ Private Functions ------------------------ */
-
 
   private inline def checkArgSize[T](args: Seq[String]): Either[String, Unit] =
     import Macros.Entr.*
@@ -346,7 +326,6 @@ private object CCParsing:
       case (s, 1, 1)           => Left(s"1 argument required, received $s")
       case (s, l, r) if l == r => Left(s"$l arguments required, received $s")
       case (s, l, r) => Left(s"$l to $r arguments required, received $s")
-
 
   private inline def genInst[T](args: Seq[String])(using m: Prd[T]) =
     import Macros.Entr.*
@@ -367,7 +346,6 @@ private object CCParsing:
     argResults.sequence match
       case Right(r)        => Right(m.fromProduct(toProd(r)).asInstanceOf[T])
       case Left((n, i, e)) => Left(readErrPattern.format(i, n, e))
-
 
   private def toProd(seq: Seq[?]): Product = Tuple.fromArray(seq.toArray)
 
