@@ -35,7 +35,7 @@ class DocstringUtilsTest extends TestBase:
 
   rawDocstrings.zipWithIndex.foreach { (docstring, idx) =>
     test(s"deNoise - $idx") {
-      assert(deNoise(docstring) == supposedDeNoised)
+      deNoise(docstring) should be(supposedDeNoised)
     }
   }
 
@@ -45,13 +45,13 @@ class DocstringUtilsTest extends TestBase:
     "main paragraph" -> Map("p1" -> "the desc of p1", "p2" -> "the desc of p2")
 
   test("extractInfo") {
-    assert(extractInfo(supposedDeNoised) == supposedInfo)
+    extractInfo(supposedDeNoised) should be(supposedInfo)
   }
 
   /* ---------------------- processDocstring ---------------------*/
   rawDocstrings.zipWithIndex.foreach { (docstring, idx) =>
     test(s"processDocstring - $idx") {
-      assert(processDocstring(docstring) == supposedInfo)
+      processDocstring(docstring) should be(supposedInfo)
     }
   }
 
