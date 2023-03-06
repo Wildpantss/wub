@@ -70,3 +70,58 @@ private object NameFormatUtils:
       case list => list.map(w => w.updated(0, w(0).toUpper)).reduce(_ + _)
 
 end NameFormatUtils
+
+private object DocstringUtils:
+
+  /** Composition of [[deNoise]] and [[extractInfo]].
+    *
+    * @param docstring
+    *   the input raw docstring
+    * @return
+    *   (command-desc, Map(arg-name -> arg-desc))
+    */
+  def processDocstring(docstring: String): (String, Map[String, String]) =
+    (deNoise andThen extractInfo)(docstring)
+
+  /** Strip the noisy '*' syntaxes, get the actual docstring content as a single
+    * line [[String]] separated with blank-space.
+    *
+    * @param docstring
+    *   the input raw docstring
+    * @return
+    *   the processed single-line [[String]]
+    */
+  def deNoise(docstring: String): String = docstring
+    .strip
+    .stripPrefix("/**")
+    .stripSuffix("*/")
+    .linesIterator
+    .map(_.strip)
+    .map(_.stripPrefix("*"))
+    .map(_.strip)
+    .filter(_ != "")
+    .reduceOption(_ + " " + _)
+    .getOrElse("")
+
+  /** Extract information from de-noised docstring.
+    *
+    * @param deNoised
+    *   the de-noised docstring
+    * @return
+    *   (command-desc, Map(arg-name -> arg-desc))
+    */
+  def extractInfo(deNoised: String): (String, Map[String, String]) =
+    deNoised.split("@param").map(_.strip).toList match
+      case head :: tails => (head, tails.map(parseParamString).toMap)
+      case Nil           => ("", Map.empty)
+
+  /* ---------------- Private Functions ----------------*/
+
+  private def parseParamString(paramString: String): (String, String) =
+    val errMsg = "paramString should contain a name and an optional description"
+    val exeception = IllegalStateException(errMsg)
+    paramString.split(" ").map(_.strip).toList match
+      case p :: desc => (p, desc.reduceOption(_ + " " + _).getOrElse(""))
+      case Nil       => throw exeception
+
+end DocstringUtils
