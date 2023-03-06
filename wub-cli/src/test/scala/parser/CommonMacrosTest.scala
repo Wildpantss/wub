@@ -39,6 +39,14 @@ class CommonMacrosTest extends TestBase:
     inspectDefaults[Baz] should be(Nil)
   }
 
+  test("inspectRequired[T]") {
+    inspectRequired[Foo] should be(List(true))
+    inspectRequired[Fax] should be(List(true, true))
+    inspectRequired[Bar] should be(List(true, false))
+    inspectRequired[Bax] should be(List(false, false))
+    inspectRequired[Baz] should be(Nil)
+  }
+
   test("inspectFieldNames[T]") {
     inspectFieldNames[Foo] should be(List("p1"))
     inspectFieldNames[Fax] should be(List("p1", "p2"))

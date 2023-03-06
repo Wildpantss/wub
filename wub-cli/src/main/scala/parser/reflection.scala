@@ -70,6 +70,21 @@ private object CommonMacros:
     inline def inspectDefaults[T]: List[Option[?]] =
       ${ Impl.inspectDefaults[T] }
 
+    /** Get the required list of target case-class's fields in the definition
+      * order. (Fill with false if the field has no default value)
+      *
+      * @note
+      *   if the type 'T' is not a case-class, the macro expansion will be
+      *   terminated and report an error message.
+      *
+      * @tparam T
+      *   the type of case-class to inspect default fields
+      * @return
+      *   A [[List]] of [[Boolean]] being true when required (has no default)
+      */
+    inline def inspectRequired[T]: List[Boolean] =
+      ${ Impl.inspectRequired[T] }
+
     /** Get the field names of target case-class. (in definition order)
       *
       * @note
@@ -196,6 +211,29 @@ private object CommonMacros:
           case Some(expr) => '{ Some($expr) }
       }
       Expr.ofList(exprList)
+
+    /** Get the required list of target case-class's fields in the definition
+      * order. (Fill with false if the field has no default value)
+      *
+      * @note
+      *   if the type 'T' is not a case-class, the macro expansion will be
+      *   terminated and report an error message.
+      *
+      * @tparam T
+      *   the type of case-class to inspect default fields
+      * @return
+      *   this macro expands into a [[List]] of [[Boolean]] being true when
+      *   required (has no default)
+      */
+    def inspectRequired[T: Type](using Quotes): Expr[List[Boolean]] =
+      import quotes.reflect.*
+      checkIsCaseClass[T]
+
+      val requiredList = getDefaultExprs[T].map {
+        case None    => true
+        case Some(_) => false
+      }
+      Expr(requiredList)
 
     /** Get the field names of target case-class. (in definition order)
       *
@@ -350,3 +388,43 @@ private object CCParsing:
   private def toProd(seq: Seq[?]): Product = Tuple.fromArray(seq.toArray)
 
 end CCParsing
+
+private object InfoInspection:
+
+  /** Get command-info from target case-class.
+    *
+    * @tparam T
+    *   the case-class's type
+    * @return
+    *   an instance of [[CmdInfo]]
+    */
+  inline def inspectCmdInfo[T]: CmdInfo =
+    ${ inspectCmdInfoImpl[T] }
+
+  /* -------------- Private Functions -------------- */
+
+  private def inspectCmdInfoImpl[T: Type](using Quotes): Expr[CmdInfo] =
+    import quotes.reflect.*
+    CommonMacros.Impl.checkIsCaseClass[T]
+
+    val tSym = TypeRepr.of[T].typeSymbol
+    val docInfo = DocstringUtils.processDocstring(tSym.docstring.getOrElse(""))
+    val argInfoMap = docInfo._2
+    val cmdNameExpr = Expr(tSym.name)
+    val cmdDescExpr = Expr(docInfo._1)
+    val cmdArgListExpr = getArgs[T](argInfoMap)
+
+    '{ CmdInfo($cmdNameExpr, $cmdDescExpr, $cmdArgListExpr) }
+
+  private def getArgs[T: Type](docInfoMap: Map[String, String])(using Quotes) =
+    import quotes.reflect.*
+    import CommonMacros.Impl.*
+
+    val argNames = inspectFieldNames[T].valueOrAbort
+    val argDescs = argNames.map(n => docInfoMap.getOrElse(n, ""))
+    val argReqs = inspectRequired[T].valueOrAbort
+    val zipped = Expr((argNames lazyZip argDescs lazyZip argReqs).toList)
+
+    '{ $zipped.map((n, d, r) => ArgInfo(n, d, r)) }
+
+end InfoInspection
