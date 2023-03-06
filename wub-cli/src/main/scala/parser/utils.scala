@@ -3,7 +3,7 @@ package parser
 
 import scala.collection.mutable.ListBuffer
 
-private[parser] object NameFormatUtils:
+private object NameFormatUtils:
 
   /** Transform a legal camel-case / pascal-case symbol name into kebab-case.
     *
