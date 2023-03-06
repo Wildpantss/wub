@@ -17,7 +17,7 @@ class MacrosTest extends TestBase:
   /* ---------------- Test definitions ---------------- */
 
 
-  test("getArity[T]") {
+  test("inspectArity[T]") {
     inspectArity[Foo] should be(1)
     inspectArity[Fax] should be(2)
     inspectArity[Bar] should be(2)
@@ -26,7 +26,7 @@ class MacrosTest extends TestBase:
   }
 
 
-  test("getFieldNames[T]") {
+  test("inspectFieldNames[T]") {
     inspectFieldNames[Foo] should be(List("p1"))
     inspectFieldNames[Fax] should be(List("p1", "p2"))
     inspectFieldNames[Bar] should be(List("p1", "p2"))
@@ -35,7 +35,7 @@ class MacrosTest extends TestBase:
   }
 
 
-  test("getDefaults[T]") {
+  test("inspectDefaults[T]") {
     inspectDefaults[Foo] should be(List(None))
     inspectDefaults[Fax] should be(List(None, None))
     inspectDefaults[Bar] should be(List(None, Some("default string")))
