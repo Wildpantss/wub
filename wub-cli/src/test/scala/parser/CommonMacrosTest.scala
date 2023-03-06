@@ -1,9 +1,9 @@
 package com.wildpants.wub.cli
 package parser
 
-import Macros.Entr.*
+import CommonMacros.Entr.*
 
-class MacrosTest extends TestBase:
+class CommonMacrosTest extends TestBase:
 
   /* ------------ Case class types to inspect ------------ */
 
@@ -47,4 +47,4 @@ class MacrosTest extends TestBase:
     inspectFieldNames[Baz] should be(Nil)
   }
 
-end MacrosTest
+end CommonMacrosTest

@@ -8,9 +8,9 @@ import scala.compiletime.*
 
 /** A group of common-used macros. (package-private inside `parser`)
   */
-private object Macros:
+private object CommonMacros:
 
-  /** Entrances of the macro inside [[Macros]].
+  /** Entrances of the macro inside [[CommonMacros]].
     *
     * (Interfaces for outer scope)
     */
@@ -114,7 +114,7 @@ private object Macros:
 
   end Entr
 
-  /** Implementations of the macro inside [[Macros]].
+  /** Implementations of the macro inside [[CommonMacros]].
     *
     * (Interfaces for inner scope)
     */
@@ -287,7 +287,7 @@ private object Macros:
 
   end Impl
 
-end Macros
+end CommonMacros
 
 /** A group of functions for case-class parsing. (package-private inside
   * `parser`)
@@ -308,13 +308,13 @@ private object CCParsing:
     *   message
     */
   inline def parseCaseClass[T](args: Seq[String])(using m: Prd[T]) =
-    Macros.Entr.checkIsDefaultsTrailing[T]
+    CommonMacros.Entr.checkIsDefaultsTrailing[T]
     checkArgSize[T](args).flatMap(_ => genInst[T](args))
 
   /* ------------------------ Private Functions ------------------------ */
 
   private inline def checkArgSize[T](args: Seq[String]): Either[String, Unit] =
-    import Macros.Entr.*
+    import CommonMacros.Entr.*
 
     val defaultsCount = inspectDefaults[T].filter(_.isDefined).size
     val arity = inspectArity[T]
@@ -328,7 +328,7 @@ private object CCParsing:
       case (s, l, r) => Left(s"$l to $r arguments required, received $s")
 
   private inline def genInst[T](args: Seq[String])(using m: Prd[T]) =
-    import Macros.Entr.*
+    import CommonMacros.Entr.*
 
     val reads = summonReads[T]
     val defaults = inspectDefaults[T]
