@@ -37,7 +37,7 @@ class CliApp private[parser] (
       case Nil                => ExecResult.CmdNotAssign
 
   private def dispatchTask(cmdName: String, cmdArgs: Seq[String]): ExecResult =
-    cmdTasks.get(kebabToPascal(cmdName)) match
+    cmdTasks.get(cmdName) match
       case None       => ExecResult.CmdNotExists(cmdName)
       case Some(task) => executeTask(cmdName, task, cmdArgs)
 
@@ -89,7 +89,7 @@ class CliAppBuilder:
   inline def cmd[T: ProductOf](func: T => Either[String, Unit]): CliAppBuilder =
     val cmdTask = (args: Seq[String]) => parseCaseClass[T](args).flatMap(func)
     val cmdInfo = inspectCmdInfo[T]
-    val cmdName = inspectTypeName[T]
+    val cmdName = camelOrPascalToKebab(inspectTypeName[T])
     this.appCmdTasks.addOne(cmdName, cmdTask)
     this.appCmdInfo.addOne(cmdName, cmdInfo)
     this
@@ -98,12 +98,12 @@ class CliAppBuilder:
     val appInfo = AppInfo(appName, appVersion, appAuthor, appDescription)
 
     this.appCmdInfo
-      .addOne("Help" -> inspectCmdInfo[Help])
-      .addOne("Version" -> inspectCmdInfo[Version])
+      .addOne("help" -> inspectCmdInfo[Help])
+      .addOne("version" -> inspectCmdInfo[Version])
 
     this.appCmdTasks
-      .addOne("Help" -> genHelpTask(this.appCmdInfo.toMap))
-      .addOne("Version" -> genVersionTask(this.appCmdInfo.toMap))
+      .addOne("help" -> genHelpTask(this.appCmdInfo.toMap))
+      .addOne("version" -> genVersionTask(this.appCmdInfo.toMap))
 
     new CliApp(appInfo, appCmdTasks.toMap, appCmdInfo.toMap)
 
@@ -126,9 +126,8 @@ class CliAppBuilder:
     val func: Help => Either[String, Unit] = _ match
       case Help("") => Right { STDOUT << outGen.genGlobalHelpText; () }
       case Help(cmd) =>
-        val c = kebabToPascal(cmd)
-        appCmdTasks.get(c) match
-          case Some(_) => Right { STDOUT << outGen.genCommandHelpText(c); () }
+        appCmdTasks.get(cmd) match
+          case Some(_) => Right { STDOUT << outGen.genCommandHelpText(cmd); () }
           case None    => Left(s"command '$cmd' not found")
     (a: Seq[String]) => parseCaseClass[Help](a).flatMap(func)
 
@@ -167,7 +166,6 @@ private class OutputTextGen(
       .toString
 
   def genCommandHelpText(cmdName: String) =
-    val kebabCmdName = camelOrPascalToKebab(cmdName)
     val cmdInfo = cmdInfoMap(cmdName)
     val argDetails = cmdInfo.args.map(a => a.dispName -> a.desc)
     val maxNameLen = argDetails.map(_._1.size).maxOption.getOrElse(0)
@@ -176,7 +174,7 @@ private class OutputTextGen(
     val builder = StringBuilder(NL)
       .append { (cmdInfo.desc <<< Underline) + NL * 2 }
       .append { "Usage:" <<< HEADER_STYLE }
-      .append { s" $kebabCmdName $usageString" + NL * 2 }
+      .append { s" $cmdName $usageString" + NL * 2 }
 
     if argDetails.size != 0 then
       builder.append { s"${"Arguments" <<< HEADER_STYLE}:" + NL }
@@ -200,7 +198,7 @@ private class OutputTextGen(
       .append { (msgPattern.formatted(cmdName) <<< Red) + NL }
       .append {
         cmdInfoMap.toList.map(_._1).map(x =>
-          s"${camelOrPascalToKebab(x) <<< CMD_NAME_STYLE}"
+          s"${x <<< CMD_NAME_STYLE}"
         ).reduce(_ + NL + _)
       }
       .append { NL * 2 }
