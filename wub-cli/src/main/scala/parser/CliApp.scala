@@ -185,22 +185,19 @@ private class OutputTextGen(
     builder.append(NL).toString
 
   def genVersionText: String = StringBuilder(NL)
-    .append { s"${appInfo.name <<< APP_NAME_STYLE} v${appInfo.ver}" + NL }
+    .append { s"${appInfo.name <<< APP_NAME_STYLE} " }
     .append { s"by ${appInfo.author}" + NL }
+    .append { s"version: ${appInfo.ver}" + NL }
     .toString
 
   def genTaskFailText(cmdName: String, cause: String): String =
-    (cause <<< Red) + NL
+    errMsg(cause) + NL
 
   def genCommandNotExistText(cmdName: String): String =
-    val msgPattern = "command '%s' not found! please choose one from follow:"
     StringBuilder(NL)
-      .append { (msgPattern.formatted(cmdName) <<< Red) + NL }
-      .append {
-        cmdInfoMap.toList.map(_._1).map(x =>
-          s"${x <<< CMD_NAME_STYLE}"
-        ).reduce(_ + NL + _)
-      }
+      .append { warnMsg(s"command '$cmdName' not found!") + NL * 2 }
+      .append { "Available commands:" + NL }
+      .append { commandList }
       .append { NL * 2 }
       .toString
 

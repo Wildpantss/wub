@@ -32,5 +32,3 @@ def main(args: String*): Unit =
     .launch(args)
 
 end main
-
-// TODO: 1. make inner CmdInfo presentation with kebab-case?

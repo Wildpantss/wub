@@ -1,6 +1,8 @@
 package com.wildpants.wub.cli
 package console
 
+import Style.*
+
 /** Alias for line-separator
   */
 inline def NL: String = scala.util.Properties.lineSeparator
@@ -88,3 +90,12 @@ object ERROUT:
     this.print(item)
 
 end ERROUT
+
+def errMsg(content: String): String = 
+  s"${"ERROR:" <<< Red} ${content <<< Red}"
+
+def warnMsg(content: String): String =
+  s"${"WARN:" <<< Yellow} ${content <<< Yellow}"
+
+def okMsg(content: String): String =
+  s"${"OK:" <<< Green} $content]"
