@@ -196,9 +196,6 @@ private class OutputTextGen(
   def genCommandNotExistText(cmdName: String): String =
     StringBuilder(NL)
       .append { warnMsg(s"command '$cmdName' not found!") + NL * 2 }
-      .append { "Available commands:" + NL }
-      .append { commandList }
-      .append { NL * 2 }
       .toString
 
   /* ------------------------ Private stuff ------------------------ */
