@@ -5,17 +5,11 @@ import NameFormatUtils.*
 import console.Style
 import console.Style.*
 
-/* ---------------- Private Type Aliases ---------------- */
-
-private type Str = String
-private type Cmds = List[CmdInfo]
-private type Args = List[ArgInfo]
-
 /* ---------------- Application Info Entities ---------------- */
 
-case class AppInfo(name: Str, ver: Str, author: Str, desc: Str)
-case class CmdInfo(name: Str, desc: Str, args: Args)
-case class ArgInfo(name: Str, desc: Str, required: Boolean)
+case class AppInfo(name: String, ver: String, author: String, desc: String)
+case class CmdInfo(name: String, desc: String, args: List[ArgInfo])
+case class ArgInfo(name: String, desc: String, required: Boolean)
 
 extension (self: CmdInfo)
   def usage: (String, String) = (camelOrPascalToKebab(self.name), self.desc)
