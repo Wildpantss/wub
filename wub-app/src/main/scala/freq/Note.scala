@@ -95,12 +95,13 @@ object Note:
   /* -------------------------------- Package Internal Stuff -------------------------------- */
 
   private def calcFundamental(noteName: NoteName, stdFreq: Double): Double =
-    if stdFreq == DEFAULT_A0_FREQ then
-      DEFAULT_A0_FUND_TABLE.toList(noteName.ordinal)
-    else
-      (0 to 12).map(i => (stdFreq * Math.pow(ST_RATIO, i - 9)).round).toList(
-        noteName.ordinal
-      )
+    stdFreq match
+      case DEFAULT_A0_FREQ => DEFAULT_A0_FUND_TABLE.toList(noteName.ordinal)
+      case _ => 
+        (0 to 12)
+          .map(i => (stdFreq * Math.pow(ST_RATIO, i - 9)).round)
+          .toList(noteName.ordinal)
+          .toDouble
 
   private def calcHarmonics(fund: Double): Iterable[Double] =
     val lPart = LL.iterate(fund / 2)(_ / 2).takeWhile(_ >= FREQ_LB).reverse
