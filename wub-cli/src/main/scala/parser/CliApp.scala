@@ -172,9 +172,11 @@ private class OutputTextGen(
     val usageString =
       cmdInfo.args.map(_.dispName).reduceOption(_ + " " + _).getOrElse("")
     val builder = StringBuilder(NL)
+      .append { cmdName.toUpperCase <<< (CMD_NAME_STYLE + Underline) }
+      .append { ": " }
       .append { (cmdInfo.desc <<< Underline) + NL * 2 }
       .append { "Usage:" <<< HEADER_STYLE }
-      .append { s" $cmdName $usageString" + NL * 2 }
+      .append { s" ${appInfo.name} $cmdName $usageString" + NL * 2 }
 
     if argDetails.size != 0 then
       builder.append { s"${"Arguments" <<< HEADER_STYLE}:" + NL }
