@@ -7,7 +7,7 @@ import cli.parser.Read
   * temperament only)
   *
   * @note
-  *   this enumeration has implemented [[Read]] type-class, so it can be read
+  *   this enumeration has implemented Read type-class, so it can be read
   *   from [[String]].
   * @author
   *   wildpants
