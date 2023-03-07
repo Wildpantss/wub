@@ -11,16 +11,27 @@ Compile / mainClass := Some("com.wildpants.wub.app.main")
 lazy val root = (project in file("."))
   .settings(name := "wub")
   .settings(addCommandAlias("run", "wubApp/run"))
+  .settings(addCommandAlias("pkg", "wubApp/graalvm-native-image:packageBin"))
   .aggregate(wubApp, wubCli)
 
 lazy val wubApp = (project in file("./wub-app"))
   .settings(name := "wubApp")
-  .settings(libraryDependencies ++= commonDeps)
+  .enablePlugins(GraalVMNativeImagePlugin)
+  .settings(commonSettings)
   .dependsOn(wubCli)
 
 lazy val wubCli = (project in file("./wub-cli"))
   .settings(name := "wubCli")
-  .settings(libraryDependencies ++= commonDeps)
+  .enablePlugins(GraalVMNativeImagePlugin)
+  .settings(commonSettings)
+
+/* -------------------------- Common Settings ------------------------- */
+
+lazy val commonSettings = Seq(
+  libraryDependencies ++= commonDeps,
+  graalVMNativeImageCommand := graalCmdPos,
+  graalVMNativeImageOptions ++= graalOptions
+)
 
 /* --------------------------- Dependencies -------------------------- */
 
@@ -31,9 +42,7 @@ lazy val commonDeps = Seq(
 
 /* ------------------------- GraalVM Configs ------------------------- */
 
-enablePlugins(GraalVMNativeImagePlugin)
-
-graalVMNativeImageOptions ++= Seq(
+lazy val graalOptions = Seq(
   "--report-unsupported-elements-at-runtime",
   "-H:+ReportExceptionStackTraces",
   "--verbose",
@@ -42,5 +51,6 @@ graalVMNativeImageOptions ++= Seq(
   "--no-fallback"
 )
 
-graalVMNativeImageCommand := // check this out, dev-machine relative!
+lazy val graalCmdPos = { // check this out, dev-machine relative!
   "D:\\Scoop\\apps\\graalvm22-jdk17\\current\\bin\\native-image.cmd"
+}
