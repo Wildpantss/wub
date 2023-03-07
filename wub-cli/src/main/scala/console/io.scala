@@ -91,7 +91,7 @@ object ERROUT:
 
 end ERROUT
 
-def errMsg(content: String): String = 
+def errMsg(content: String): String =
   s"${"ERROR:" <<< Red} ${content <<< Red}"
 
 def warnMsg(content: String): String =

@@ -97,7 +97,7 @@ object Note:
   private def calcFundamental(noteName: NoteName, stdFreq: Double): Double =
     stdFreq match
       case DEFAULT_A0_FREQ => DEFAULT_A0_FUND_TABLE.toList(noteName.ordinal)
-      case _ => 
+      case _ =>
         (0 to 12)
           .map(i => (stdFreq * Math.pow(ST_RATIO, i - 9)).round)
           .toList(noteName.ordinal)
