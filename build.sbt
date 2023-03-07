@@ -1,6 +1,6 @@
 /* ---------------------------- Build Info --------------------------- */
 
-ThisBuild / version := "0.0.4"
+ThisBuild / version := "0.1.0"
 ThisBuild / scalaVersion := "3.2.2"
 ThisBuild / organization := "com.wildpants"
 

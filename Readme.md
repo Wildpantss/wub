@@ -83,4 +83,4 @@ wub help freq
 ## Build
 
 * [SBT](https://www.scala-sbt.org/)
-* [Scala/Native](https://scala-native.org/)
+* [GraalVM](https://www.graalvm.org/)
