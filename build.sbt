@@ -6,10 +6,11 @@ ThisBuild / organization := "com.wildpants"
 
 /* ------------------------- Project Structure ----------------------- */
 
-lazy val wub = (project in file("."))
+Compile / mainClass := Some("com.wildpants.wub.app.main")
+
+lazy val root = (project in file("."))
   .settings(name := "wub")
   .settings(addCommandAlias("run", "wubApp/run"))
-  .settings(mainClass := Some("com.wildpants.wub.app.main"))
   .aggregate(wubApp, wubCli)
 
 lazy val wubApp = (project in file("./wub-app"))
@@ -31,6 +32,7 @@ lazy val commonDeps = Seq(
 /* ------------------------- GraalVM Configs ------------------------- */
 
 enablePlugins(GraalVMNativeImagePlugin)
+
 graalVMNativeImageOptions ++= Seq(
   "--report-unsupported-elements-at-runtime",
   "-H:+ReportExceptionStackTraces",
@@ -39,3 +41,6 @@ graalVMNativeImageOptions ++= Seq(
   "--initialize-at-build-time",
   "--no-fallback"
 )
+
+graalVMNativeImageCommand := // check this out, dev-machine relative!
+  "D:\\Scoop\\apps\\graalvm22-jdk17\\current\\bin\\native-image.cmd"
