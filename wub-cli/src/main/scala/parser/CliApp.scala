@@ -187,9 +187,10 @@ private class OutputTextGen(
     builder.append(NL).toString
 
   def genVersionText: String = StringBuilder(NL)
-    .append { s"${appInfo.name <<< APP_NAME_STYLE} " }
-    .append { s"by ${appInfo.author}" + NL }
-    .append { s"version: ${appInfo.ver}" + NL }
+    .append { s"Current ${appInfo.name <<< APP_NAME_STYLE} version: " }
+    .append { s"v${appInfo.ver}" <<< Cyan }
+    .append { NL }
+    .append { s"by ${appInfo.author}" + NL * 2 }
     .toString
 
   def genTaskFailText(cmdName: String, cause: String): String =
