@@ -7,9 +7,9 @@ import console.Style.*
 
 /* ---------------- Application Info Entities ---------------- */
 
-case class AppInfo(name: String, ver: String, author: String, desc: String)
-case class CmdInfo(name: String, desc: String, args: List[ArgInfo])
-case class ArgInfo(name: String, desc: String, required: Boolean)
+private case class AppInfo(name: String, ver: String, author: String, desc: String)
+private case class CmdInfo(name: String, desc: String, args: List[ArgInfo])
+private case class ArgInfo(name: String, desc: String, required: Boolean)
 
 extension (self: CmdInfo)
   def usage: (String, String) = (camelOrPascalToKebab(self.name), self.desc)
